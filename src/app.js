@@ -3,6 +3,7 @@ const favicon = require('serve-favicon');
 const compress = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
+const morgan = require('morgan');
 const logger = require('./logger');
 
 const feathers = require('@feathersjs/feathers');
@@ -28,6 +29,7 @@ app.configure(configuration());
 app.use(helmet({
   contentSecurityPolicy: false
 }));
+app.use(morgan('dev'));
 app.use(cors());
 app.use(compress());
 app.use(express.json());

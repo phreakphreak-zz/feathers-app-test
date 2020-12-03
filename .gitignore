@@ -2,6 +2,9 @@
 logs
 *.log
 
+# frontend
+frontend
+
 # Runtime data
 pids
 *.pid
