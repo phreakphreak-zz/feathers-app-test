@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Feathers Example</title>
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/chat.css"
+    />
+  </head>
+  <body>
+    <main id="main" class="container">
+      <h1>Welcome to Feathers</h1>
+
+      <form class="form" onsubmit="sendData(event.preventDefault())">
+        <input type="text" id="x" placeholder="x" />
+        <input type="text" id="y" placeholder="y" />
+        <input type="text" id="z" placeholder="z" />
+        <input type="text" id="pitch" placeholder="pitch" />
+        <input type="text" id="roll" placeholder="roll" />
+        <input type="text" id="inclination" placeholder="inclination" />
+        <input type="text" id="orientation" placeholder="orientation" />
+        <input type="text" id="acceleration" placeholder="acceleration" />
+        <button type="submit" class="button button-primary">
+          Send message
+        </button>
+      </form>
+
+      <h2>Here are the current messages:</h2>
+    </main>
+
+    <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript">
+      const socket = io("http://192.168.0.43:3000");
+      const app = feathers();
+
+      // Register socket.io to talk to our server
+      app.configure(feathers.socketio(socket));
+
+      // Form submission handler that sends a new message
+      async function sendData() {
+        const messageInput = document.getElementById("message-text");
+
+        // Create a new message with the input field value
+        await app.service("messages").create({
+          text: messageInput.value,
+        });
+
+        messageInput.value = "";
+      }
+
+      function addValuesAccelerometer(data) {
+        console.log("metodo ejecutandose");
+
+        const x = document.getElementById("x");
+        const y = document.getElementById("y");
+        const z = document.getElementById("z");
+        const pitch = document.getElementById("pitch");
+        const roll = document.getElementById("roll");
+        const inclination = document.getElementById("inclination");
+        const orientation = document.getElementById("orientation");
+        const acceleration = document.getElementById("acceleration");
+        x.value = data.x;
+        y.value = data.y;
+        z.value = data.z;
+        pitch.value = data.pitch;
+        roll.value = data.roll;
+        inclination.value = data.inclination;
+        orientation.value = data.orientation;
+        acceleration.value = data.acceleration;
+      }
+      const main = async () => {
+        try {
+
+        const response = await app.service("accelerometer").find({
+          query: {
+            "data.deviceId": "5fa45c8f0abd0a30caa181af",
+            $limit: 1,
+            $sort: {
+              $natural: -1,
+            },
+          },
+        });
+
+        response.forEach(element => {
+          const {data} = element;
+          addValuesAccelerometer(data);
+        });
+
+
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      //main();
+
+
+      app.service("accelerometer").on("created", test);
+
+
+      async function test() {
+        const res = await app.service("accelerometer").find({
+          query: {
+            "data.deviceId": "5fa45c8f0abd0a30caa181af",
+            $limit: 1,
+            $sort: {
+              $natural: -1,
+            },
+          },
+        });
+        res.forEach(element => addValuesAccelerometer(element.data))
+        console.log(res);
+      }
+
+      async function test2() {
+        await app.service("accelerometer").create({
+          x: 777,
+          y: 5,
+          z: 6,
+          pitch: 10,
+          roll: -1,
+          inclination: "1",
+          orientation: "1",
+          acceleration: "1",
+          deviceId: "5fa45c8f0abd0a30caa181af",
+        });
+      }
+    </script>
+    <button onclick="test()" value="test">test</button>
+    <button onclick="test2()" value="test2">test2</button>
+  </body>
+</html>

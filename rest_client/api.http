@@ -23,7 +23,7 @@ GET http://localhost:3000/api/devices/asd HTTP/1.1
 GET http://localhost:3000/api/devices/5fa45c8f0abd0a30caa181af HTTP/1.1
 
 ###
-GET http://localhost:3000/accelerometer HTTP/1.1
+GET http://192.168.0.43:3000/accelerometer HTTP/1.1
 
 ###
 GET http://localhost:3000/accelerometer/5fa45c8f0abd0a30caa181af HTTP/1.1
@@ -34,8 +34,8 @@ POST http://localhost:3000/accelerometer HTTP/1.1
 content-type: application/json
 
 {
-    "x":67,
-    "y":5,
+    "x":366,
+    "y":15,
     "z":6,
     "pitch":10,
     "roll":-1,
